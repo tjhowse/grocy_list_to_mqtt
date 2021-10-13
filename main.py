@@ -39,8 +39,10 @@ class GrocyToThermalPrinter:
 
     def button_pressed(self, payload):
         self.grocy.sync()
+        self.mqtt.publish(mqtt_topic_print, "Shopping list:\n")
         for line in self.get_shopping_list():
             self.mqtt.publish(mqtt_topic_print, line)
+        self.mqtt.publish(mqtt_topic_print, "\n\n")
 
     def get_shopping_list(self):
         sl = list(self.grocy.get_shopping_list_sorted_by_aisleOrder())
