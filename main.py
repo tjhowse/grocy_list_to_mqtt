@@ -11,6 +11,8 @@ class GrocyToThermalPrinter:
     def __init__(self):
         self.grocy = grocy_api(grocy_api_key, grocy_domain)
         self.grocy.sync()
+        # print(self.grocy.get_shopping_list_sorted_by_aisleOrder())
+        # return
 
         self.mqtt = mqtt.Client()
         self.mqtt.username_pw_set(mqtt_user, password=mqtt_pw)
@@ -36,12 +38,12 @@ class GrocyToThermalPrinter:
             self.button_pressed(msg.payload)
 
     def button_pressed(self, payload):
-        print(payload)
+        self.grocy.sync()
         for line in self.get_shopping_list():
             self.mqtt.publish(mqtt_topic_print, line)
 
     def get_shopping_list(self):
-        sl = list(self.grocy.get_shopping_list())
+        sl = list(self.grocy.get_shopping_list_sorted_by_aisleOrder())
         print(sl)
         return sl
 

@@ -105,6 +105,27 @@ class grocy_api:
             name = self.tables['products'][product['product_id']]['name']
             yield name
 
+    def get_shopping_list_sorted_by_aisleOrder(self):
+        ### References shopping_list and user_fields to produce a
+        ### shopping list sorted by the aisleOrder userfield.
+
+        joined = []
+        for id in self.tables['shopping_list']:
+            product_id = self.tables['shopping_list'][id]['product_id']
+            name = self.tables['products'][product_id]['name']
+            aisle = self.tables['products'][product_id]['product_group_id']
+            aisle_order = self.tables['products'][product_id]['userfields']['aisleOrder']
+            if aisle_order is None:
+                aisle_order = 0
+            else:
+                aisle_order = float(aisle_order)
+            if aisle == '':
+                aisle = 0
+            else:
+                aisle = int(aisle)
+            joined.append((name, aisle, aisle_order))
+        return [x[0] for x in sorted(joined, key=lambda x: (x[1], x[2]))]
+
     def get_stock_list(self):
         for id in self.tables['stock']:
             product = self.tables['stock'][id]
