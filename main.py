@@ -56,13 +56,14 @@ class GrocyToThermalPrinter:
             self.mqtt.publish(mqtt_topic_print, "Shopping list:\n")
             for line in self.get_shopping_list():
                 self.mqtt.publish(mqtt_topic_print, line)
-            self.mqtt.publish(mqtt_topic_print, "\n\n")
+            self.mqtt.publish(mqtt_topic_print, "\n\n\n")
         elif int(payload) == 2:
-            fact = get_random_fact()
+            fact = "Fun fact: {}".format(get_random_fact())
+            print(fact)
             split = textwrap.wrap(fact, width=32+1)
             for line in split:
                 self.mqtt.publish(mqtt_topic_print, line)
-            self.mqtt.publish(mqtt_topic_print, "\n\n")
+            self.mqtt.publish(mqtt_topic_print, "\n\n\n")
 
     def get_shopping_list(self):
         sl = list(self.grocy.get_shopping_list_sorted_by_aisleOrder())
