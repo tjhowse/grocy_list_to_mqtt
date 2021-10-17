@@ -60,7 +60,7 @@ class GrocyToThermalPrinter:
         elif int(payload) == 2:
             fact = "Fun fact: {}".format(get_random_fact())
             print(fact)
-            split = textwrap.wrap(fact, width=32+1)
+            split = textwrap.wrap(fact, width=32)
             for line in split:
                 self.mqtt.publish(mqtt_topic_print, line)
             self.mqtt.publish(mqtt_topic_print, "\n\n\n")
