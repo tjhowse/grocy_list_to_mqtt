@@ -39,6 +39,7 @@ class grocy_api:
         response = requests.get(url, headers=self.headers)
         if response.status_code != 200:
             print(response.text)
+            return True
         time = json.loads(response.text)
         if self.db_changed_time is None or self.db_changed_time != time['changed_time']:
             self.db_changed_time = time['changed_time']
@@ -94,6 +95,7 @@ class grocy_api:
         response = requests.get(url, headers=self.headers)
         if response.status_code != 200:
             print(response.text)
+            return
         raw = json.loads(response.text)
         self.tables[entity_name] = {}
         for entity in raw:
@@ -148,6 +150,7 @@ class grocy_api:
         print(response)
         if response.status_code != 204:
             print(response.text)
+            return
         return response.text
 
     def search_product_names_by_name(self, name):
@@ -183,6 +186,8 @@ class grocy_api:
         response = requests.post(url, headers=self.headers, data=json.dumps(add))
         if response.status_code != 204:
             print(response.text)
+            return False
+        return True
 
     def remove_product_from_shopping_list(self, product):
         ### Removes a product to the shopping list by name
@@ -195,6 +200,8 @@ class grocy_api:
         response = requests.post(url, headers=self.headers, data=json.dumps(add))
         if response.status_code != 204:
             print(response.text)
+            return False
+        return True
 
     def add_product_to_stock(self, product):
         ### Adds a product to the stock list by name
@@ -205,6 +212,8 @@ class grocy_api:
         response = requests.post(url, headers=self.headers, data=json.dumps(add))
         if response.status_code != 200:
             print(response.text)
+            return False
+        return True
 
     def remove_product_from_stock(self, product):
         ### Removes a product from the stock list by name
@@ -215,6 +224,8 @@ class grocy_api:
         response = requests.post(url, headers=self.headers, data=json.dumps(add))
         if response.status_code != 200:
             print(response.text)
+            return False
+        return True
 
 if __name__ == '__main__':
     key = os.getenv('GROCY_API_KEY')
