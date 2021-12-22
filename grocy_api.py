@@ -28,6 +28,7 @@ class grocy_api:
                                 # 'recipes',
                                 # 'quantity_units',
                                 'shopping_list',
+                                'shopping_lists',
                                 'stock',
                             ]
         self.db_changed_time = None
@@ -110,6 +111,7 @@ class grocy_api:
     def get_shopping_list_sorted_by_aisleOrder(self, includeCount=True):
         ### References shopping_list and user_fields to produce a
         ### shopping list sorted by the aisleOrder userfield.
+        self.sync_entity("shopping_list")
 
         joined = []
         for id in self.tables['shopping_list']:
@@ -229,6 +231,33 @@ class grocy_api:
             print(response.text)
             return False
         return True
+
+    def get_shopping_list_note(self, sl_number=1):
+        self.sync_entity("shopping_lists")
+        try:
+            return strip_tags(self.tables["shopping_lists"]['1']['description'])
+        except:
+            return ""
+
+from io import StringIO
+from html.parser import HTMLParser
+
+class MLStripper(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.reset()
+        self.strict = False
+        self.convert_charrefs= True
+        self.text = StringIO()
+    def handle_data(self, d):
+        self.text.write(d)
+    def get_data(self):
+        return self.text.getvalue()
+
+def strip_tags(html):
+    s = MLStripper()
+    s.feed(html)
+    return s.get_data()
 
 if __name__ == '__main__':
     key = os.getenv('GROCY_API_KEY')

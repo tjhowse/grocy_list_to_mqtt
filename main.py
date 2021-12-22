@@ -56,6 +56,14 @@ class GrocyToThermalPrinter:
             self.mqtt.publish(mqtt_topic_print, "Shopping list:\n")
             for line in self.get_shopping_list():
                 self.mqtt.publish(mqtt_topic_print, line)
+            self.mqtt.publish(mqtt_topic_print, "\n")
+            note = self.grocy.get_shopping_list_note()
+            if note:
+                self.mqtt.publish(mqtt_topic_print, "Notes:\n")
+                for line in textwrap.wrap(note, width=32):
+                    self.mqtt.publish(mqtt_topic_print, line)
+                self.mqtt.publish(mqtt_topic_print, "\n")
+
             self.mqtt.publish(mqtt_topic_print, "\n\n\n")
         elif int(payload) == 2:
             fact = "Fun fact: {}".format(get_random_fact())
