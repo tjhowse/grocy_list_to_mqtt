@@ -59,7 +59,7 @@ class GrocyToThermalPrinter:
             self.mqtt.publish(mqtt_topic_print, "\n")
             note = self.grocy.get_shopping_list_note()
             if note:
-                self.mqtt.publish(mqtt_topic_print, "Notes:\n")
+                self.mqtt.publish(mqtt_topic_print, "Notes:")
                 for line in textwrap.wrap(note, width=32):
                     self.mqtt.publish(mqtt_topic_print, line)
                 self.mqtt.publish(mqtt_topic_print, "\n")

@@ -260,9 +260,9 @@ def strip_tags(html):
     return s.get_data()
 
 if __name__ == '__main__':
+    from secrets_real import *
     key = os.getenv('GROCY_API_KEY')
     domain = "https://{}".format(os.getenv('GROCY_DOMAIN'))
-    g = grocy_api(key, domain)
+    g = grocy_api(grocy_api_key, grocy_domain)
     g.sync()
-    for product in g.search_products_by_name('sugar'):
-        print(product['name'])
+    print(g.get_shopping_list_note())
