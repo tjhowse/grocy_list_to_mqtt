@@ -116,9 +116,14 @@ class grocy_api:
         joined = []
         for id in self.tables['shopping_list']:
             product_id = self.tables['shopping_list'][id]['product_id']
-            name = self.tables['products'][product_id]['name']
-            aisle = self.tables['products'][product_id]['product_group_id']
-            aisle_order = self.tables['products'][product_id]['userfields']['aisleOrder']
+            aisle = 0
+            aisle_order = 0
+            if product_id:
+                name = self.tables['products'][product_id]['name']
+                aisle = self.tables['products'][product_id]['product_group_id']
+                aisle_order = self.tables['products'][product_id]['userfields']['aisleOrder']
+            elif self.tables['shopping_list'][id]['note']:
+                name = self.tables['shopping_list'][id]['note']
             count = self.tables['shopping_list'][id]['amount']
             if includeCount:
                 name = "{} x {}".format(count, name)
