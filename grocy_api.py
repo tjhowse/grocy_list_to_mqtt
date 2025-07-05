@@ -240,8 +240,9 @@ class grocy_api:
     def get_shopping_list_note(self, sl_number=1):
         self.sync_entity("shopping_lists")
         try:
-            return strip_tags(self.tables["shopping_lists"]['1']['description'])
-        except:
+            return strip_tags(self.tables["shopping_lists"][1]['description'])
+        except Exception as e:
+            print("Exeption:"+str(e))
             return ""
 
 from io import StringIO

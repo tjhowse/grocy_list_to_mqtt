@@ -52,7 +52,11 @@ class GrocyToThermalPrinter:
 
     def button_pressed(self, payload):
         if int(payload) == 1:
-            self.grocy.sync()
+            try:
+              self.grocy.sync()
+            except:
+              self.grocy = grocy_api(grocy_api_key, grocy_domain)
+              self.grocy.sync()
             self.mqtt.publish(mqtt_topic_print, "Shopping list:\n")
             for line in self.get_shopping_list():
                 self.mqtt.publish(mqtt_topic_print, line)
