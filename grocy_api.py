@@ -131,7 +131,7 @@ class grocy_api:
                 aisle_order = 0
             else:
                 aisle_order = float(aisle_order)
-            if aisle == '':
+            if not aisle:
                 aisle = 0
             else:
                 aisle = int(aisle)
