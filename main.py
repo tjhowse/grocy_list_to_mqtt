@@ -51,25 +51,33 @@ class GrocyToThermalPrinter:
             self.button_pressed(msg.payload)
 
     def button_pressed(self, payload):
-        if int(payload) == 1:
+        print(str(payload))
+        if payload == b'short' or payload == b'long':
             try:
               self.grocy.sync()
             except:
               self.grocy = grocy_api(grocy_api_key, grocy_domain)
               self.grocy.sync()
-            self.mqtt.publish(mqtt_topic_print, "Shopping list:\n")
-            for line in self.get_shopping_list():
-                self.mqtt.publish(mqtt_topic_print, line)
-            self.mqtt.publish(mqtt_topic_print, "\n")
-            note = self.grocy.get_shopping_list_note()
-            if note:
-                self.mqtt.publish(mqtt_topic_print, "Notes:")
-                for line in textwrap.wrap(note, width=32):
+            if payload == b'short':
+                self.mqtt.publish(mqtt_topic_print, "Shopping list:\n")
+                for line in self.get_shopping_list():
                     self.mqtt.publish(mqtt_topic_print, line)
                 self.mqtt.publish(mqtt_topic_print, "\n")
+                note = self.grocy.get_shopping_list_note()
+                if note:
+                    self.mqtt.publish(mqtt_topic_print, "Notes:")
+                    for line in textwrap.wrap(note, width=32):
+                        self.mqtt.publish(mqtt_topic_print, line)
+                    self.mqtt.publish(mqtt_topic_print, "\n")
 
-            self.mqtt.publish(mqtt_topic_print, "\n\n\n")
-        elif int(payload) == 2:
+                self.mqtt.publish(mqtt_topic_print, "\n\n\n")
+            elif payload == b'long':
+                self.mqtt.publish(mqtt_topic_print, "Due chores:\n")
+                for line in self.grocy.get_due_chores():
+                    self.mqtt.publish(mqtt_topic_print, line)
+                self.mqtt.publish(mqtt_topic_print, "\n\n\n")
+        #elif int(payload) == 2:
+        elif False:
             fact = "Fun fact: {}".format(get_random_fact())
             print(fact)
             split = textwrap.wrap(fact, width=32)

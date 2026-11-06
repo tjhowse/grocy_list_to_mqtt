@@ -138,6 +138,22 @@ class grocy_api:
             joined.append((name, aisle, aisle_order))
         return [x[0] for x in sorted(joined, key=lambda x: (x[1], x[2]))]
 
+    def get_due_chores(self):
+        """Return chores due today or overdue, sorted by next estimated tracking."""
+        url = '{}chores'.format(self.base_url)
+        response = requests.get(url, headers=self.headers)
+        if response.status_code != 200:
+            print(response.text)
+            return []
+        today = time.strftime('%Y-%m-%d')
+        due_chores = []
+        for chore in json.loads(response.text):
+            next_execution = chore.get('next_estimated_execution_time')
+            if next_execution and next_execution[:10] <= today:
+                due_chores.append(chore)
+        return [chore['chore_name'] for chore in sorted(
+            due_chores, key=lambda chore: chore['next_estimated_execution_time'])]
+
     def get_stock_list(self):
         for id in self.tables['stock']:
             product = self.tables['stock'][id]
